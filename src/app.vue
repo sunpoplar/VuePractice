@@ -3,8 +3,9 @@
         <!-- header -->
         <mt-header fixed title="固定在顶部"></mt-header>
         <!-- view -->
-
-
+		<transition>
+			<router-view></router-view>
+		</transition>
         <!-- tabber -->
         <nav class="mui-bar mui-bar-tab">
 			<router-link class="mui-tab-item" to="/home">
@@ -24,15 +25,33 @@
 				<span class="mui-tab-label">搜索</span>
 			</router-link>
 		</nav>
-        <h1>123</h1>
-        <h1>1234</h1>
+        
     </div>
 </template>
 <script>
 </script>
 <style lang="scss" scoped>
 .app-container{
-    padding-top: 80px
+    padding-top: 40px;
+	overflow: hidden;
+}
+.v-enter{
+	transform: translateX(100%);
+	opacity: 0;
+}
+.v-leave-to{
+	transform: translateX(-100%);
+	opacity: 0;
+	position:absolute
+
+}
+.v-enter-to{
+// padding-top: 100px;
+// position:absolute
+}
+.v-enter-active,
+.v-leave-active{
+	transition: all 05s ease
 }
 </style>>
 </style>
