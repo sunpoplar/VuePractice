@@ -3,12 +3,12 @@
 
     <h3>发表评论：</h3>
     <hr>
-    <textarea placeholder="请输入要bb的内容（最多100字）" maxlength="100"></textarea>
-    <mt-button type="primary" size="large">发表评论</mt-button>
+    <textarea placeholder="请输入要bb的内容（最多100字）" maxlength="100" v-model="msg"></textarea>
+    <mt-button type="primary" size="large" @click="postComment">发表评论</mt-button>
     <div class="cmt-list">
         <div class="cmt-item" v-for="(item,i) in comments" :key="item.add_time">
             <div class="cmt-title">
-                第{{i + 1}}楼&nbsp;&nbsp;用户：{{item.user_name}}&nbsp;&nbsp;&nbsp;发表时间：{{item.add_time|dateFormat}}
+                第{{i + 1}}楼&nbsp;&nbsp;用户：{{item.user_name}}&nbsp;&nbsp;&nbsp;发表时间：{{item.add_time | dateFormat}}
             </div>
             <div class="cmt-body">
                 {{item.content ? item.content : "这个人很懒！没有留下评论" }}
@@ -28,7 +28,8 @@ export default {
     data(){
         return {
             comments : [],
-            pageindex : 1
+            pageindex : 1,
+            msg:""
         }
     },
     created(){
@@ -44,6 +45,28 @@ export default {
                     Toast("获取评论失败哦")
                 }
             })
+        },
+        postComment(){
+            if(!this.msg.trim()){
+                return Toast("评论不能为空")
+            }
+            this.$http.post("api/postcomment/" + this.id , {content:this.msg.trim()}).then(
+                result => {
+                    if(result.body.status === 0){
+                        
+                        let cmt = {
+                            user_name:'匿名用户',
+                            add_time: Date.now(),
+                            content: this.msg.trim()
+                        }
+                        this.comments.unshift(cmt)
+                        Toast('评论发表成功！')
+                        this.msg = ''
+                    }else{
+                        Toast('评论发表失败！')
+                    }
+                }
+            )
         }
     },
     props:["id"]
